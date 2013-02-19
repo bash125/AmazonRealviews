@@ -1,0 +1,18 @@
+.reviewBox {
+	background-color: #dff0d8;
+	border-style:solid;
+	border-width:1px;
+	border-color: #dff0d8;
+	font-size: 110%;
+	color: #565656;
+	padding: 6px;
+}
+
+.adjustedRating {
+	color:#090;
+	font-weight:bold;
+}
+
+.unadjustedRating {
+	font-weight:bold;
+}

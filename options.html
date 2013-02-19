@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <link href="css/bootstrap.min.css" rel="stylesheet" media="screen" />
+    <title>Real Amazon Ratings Options</title>
+
+    <script type="text/javascript" src="js/jquery.js"></script>
+    <script type="text/javascript" src="js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/options.js"></script>
+</head>
+
+<body>
+    <div class="container">
+    <div class="row">
+        <div class="span12">
+            <h3>Adjusted Rating Calculation</h3>
+            <p>
+                The adjusted rating formula is called a <a href="http://masanjin.net/blog/bayesian-average">Bayesian average</a>. The general formula is:
+                <br />
+                <br />
+                <math xmlns="http://www.w3.org/1998/Math/MathML" class="span4 offset3 lead">
+                    <mfrac>
+                        <mrow>
+                            <mi>C</mi>
+                            <mi>m</mi>
+                            <mo>+</mo>
+                            <mi>R</mi>
+                            <mi>v</mi>
+                        </mrow>
+                        <mrow>
+                            <mi>m</mi>
+                            <mo>+</mo>
+                            <mi>v</mi>
+                        </mrow>
+                    </mfrac>
+                </math>
+                <br />
+                <br />
+                <br />
+                <ul>
+                    <li>C = Assumed average rating across all products</li>
+                    <li>m = Minimum number of reviews for an item</li>
+                    <li>R = Average rating for this item</li>
+                    <li>v = Number of product reviews for this item</li>
+                </ul>
+            </p>
+            <p>
+                <br />
+                The specific formula with your settings is as follows:
+                <br />
+                <br />
+                <math xmlns="http://www.w3.org/1998/Math/MathML" id="formula" class="lead">
+                    <mfrac>
+                        <mrow>
+                            <mi class="meanRating">3</mi>
+                            <mo>*</mo>
+                            <mi class="minRatings">10</mi>
+                            <mo>+</mo>
+                            <mi>Average Product Rating</mi>
+                            <mo>*</mo>
+                            <mi>Number of Product Reviews</mi>
+                        </mrow>
+                        <mrow>
+                            <mi class="minRatings">10</mi>
+                            <mo>+</mo>
+                            <mi>Number of Product Reviews</mi>
+                        </mrow>
+                    </mfrac>
+                </math>
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="span8">
+            <form id="optionsForm" class="form-horizontal">
+                <fieldset>
+                    <legend>Options</legend>
+
+                    <div class="control-group">
+                        <label class="control-label" for="siteAvgRating">C 
+                            <br />
+                            <small class="muted">Assumed average rating across all products</small>
+                        </label>
+                        <div class="controls">  
+                            <input type="number" name="siteAvgRating" id="siteAvgRating" class="text" step="any" min="1" max="5" required />
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label" for="minReviews">m
+                            <br />
+                            <small class="muted">Minimum number of reviews for an item</small>
+                        </label>
+                        <div class="controls">  
+                            <input type="number" name="minReviews" id="minReviews" class="text" min="1" required />
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label" for="decimalPlaces">Number of Decimal Places to Display</label>
+                        <div class="controls">  
+                            <input type="number" name="decimalPlaces" id="decimalPlaces" class="text" min="1" required />
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <div class="controls">
+                            <button type="submit" class="btn btn-primary">Save Options</button>
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+            <div id="status"></div>
+        </div>
+    </div>
+    </div>
+</body>
+
+</html>

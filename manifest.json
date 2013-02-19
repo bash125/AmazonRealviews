@@ -1,0 +1,37 @@
+{
+  "manifest_version": 2,
+
+  "name": "Amazon Realviews",
+  "description": "Making sense for your cents.",
+  "version": "1.11",
+
+  "icons": { "16": "icon16.png",
+             "48": "icon48.png",
+            "128": "icon128.png" },
+
+  "permissions": [
+    "http://www.amazon.com/",
+    "storage"
+  ],
+  "options_page": "options.html", 
+  
+  "background": {
+    "scripts": ["js/eventPage.js"],
+    "persistent": false
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["http://www.amazon.com/*"],
+      "exclude_globs": ["http://www.amazon.com/s/*"],
+      "js": ["js/jquery.js", "js/productPage.js"],
+      "css": ["css/main.css"]
+    },
+    {
+      "matches": ["http://www.amazon.com/s/*"],
+      "js": ["js/jquery.js", "js/searchPage.js"],
+      "css": ["css/main.css"]
+    }
+  ]
+
+}
