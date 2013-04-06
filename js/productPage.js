@@ -12,6 +12,9 @@ function addAdjustedReview() {
     $.each(reviewNode.children(), function() {
         if($(this).hasClass("asinReviewsSummary")) {
             var avgRatingText = $(this).text().trim();
+            if (!avgRatingText) {
+                avgRatingText = $(this).find("img").attr("alt").trim();
+            }
             avgRating = parseFloat(avgRatingText.substring(0, 3));
         } else if ($(this).is("a")) {
             var numReviewsText = $(this).text().replace(/[^\d\.\-\ ]/g, '');
