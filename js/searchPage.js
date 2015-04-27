@@ -6,47 +6,38 @@ function addAdjustedRating() {
     "use strict";
 
     //Find the average rating of Amazon users
-    var reviews = $('.rvw');
-
-    //Hack to deal with books
-    if (reviews.length < 1) {
-        reviews = $('.starsAndPrime');
-    }
+    var reviews = $('.a-icon-star').parent().parent().parent().parent();
+    var numberRegex = /[\d\.]+/;
 
     $.each(reviews, function() {
         var reviewNode = $(this);
-        var avgRatingText = $(this).find('.asinReviewsSummary').find('a').attr('alt');
-        var avgRating = parseFloat(avgRatingText.substring(0, 3));
 
-        var numReviewsText = $(this).find('.rvwCnt').find('a').text().trim();
+        if (!reviewNode.has('.reviewBox').length) {
+            var avgRatingText = reviewNode.find('.a-icon-alt').text().trim();
+            var avgRating = numberRegex.exec(avgRatingText)[0];
+            avgRating = parseFloat(avgRating);
 
-        //Hack to deal with books
-        if (numReviewsText === "") {
-            numReviewsText = $(this).find('.reviewsCount').find('a').text().trim();
-        }
+            var numReviewsText = reviewNode.find('.a-link-normal').text().trim();
+            numReviewsText = numReviewsText.replace(/[^\d\.\-\ ]/g, '');
 
-        //Remove commas from numbers
-        numReviewsText = numReviewsText.replace(/[^\d\.\-\ ]/g, '');
+            var numReviews = parseInt(numReviewsText, 10);
 
-        var numReviewsWords = numReviewsText.split(" ");
-        var numReviews = parseInt(numReviewsWords[0], 10);
+            //Send a message to the event page to calculate the Bayesian average
+            chrome.extension.sendMessage({
+                numReviews: numReviews,
+                avgRating: avgRating
+            }, function(response) {
+                var decimalPlaces = parseInt(response.decimalPlaces, 10);
+                var bayesianAverage = parseFloat(response.bayesianAverage);
 
-        //Send a message to the event page to calculate the Bayesian average
-        chrome.extension.sendMessage({
-            numReviews: numReviews,
-            avgRating: avgRating
-        }, function(response) {
-            var decimalPlaces = parseInt(response.decimalPlaces, 10);
-            var bayesianAverage = parseFloat(response.bayesianAverage);
-
-            //Add the Bayesian Average to the page
-            var bayesianAverageText = $('<p>');
-            bayesianAverageText.attr('class', "reviewBox");
-            bayesianAverageText.append("<span class=\"adjustedRating\">" + bayesianAverage.toFixed(decimalPlaces) + "</span> (<span class=\"unadjustedRating\">" + avgRating.toFixed(1) + "</span> unadjusted) out of 5 stars");
-            reviewNode.append(bayesianAverageText);
+                //Add the Bayesian Average to the page
+                var bayesianAverageText = $('<p>');
+                bayesianAverageText.attr('class', "reviewBox");
+                bayesianAverageText.append("<span class=\"adjustedRating\">" + bayesianAverage.toFixed(decimalPlaces) + "</span> (<span class=\"unadjustedRating\">" + avgRating.toFixed(1) + "</span> unadjusted) out of 5 stars");
+                reviewNode.append(bayesianAverageText);
 
             });
-
+        }
     });
 
 }
@@ -54,23 +45,16 @@ function addAdjustedRating() {
 $(document).ready(function() {
     "use strict";
 
-    // Add an observer to fire whenever the #click_withinLazyLoad_tower elements change
+    addAdjustedRating();
+
+    // Add an observer to fire whenever the user goes to the next page
     var observer = new WebKitMutationObserver(function(mutations, observer) {
-
-        // var map = {};
-
-        // console.log(mutations);
         for (var i = 0; i < mutations.length; i++) {
-            // map[mutations[i].target.tagName] = 1;
-            // console.log(mutations[i].target.tagName + ": " + mutations[i].target.id);
-            if (mutations[i].target.id === 'click_withinLazyLoad_tower') {
+            if (mutations[i].target.id === 'rightResultsATF') {
                 addAdjustedRating();
                 break;
             }
         }
-
-        // console.log(map);
-
     });
 
     // Put an observer on the entire document and its children

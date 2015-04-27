@@ -23,4 +23,5 @@ chrome.extension.onMessage.addListener(
         var bayesianAverage = (siteAvgNumReviews*siteAvgRating + avgRating*totalReviews) / (siteAvgNumReviews + totalReviews);
 
         sendResponse({bayesianAverage: bayesianAverage, decimalPlaces: decimalPlaces });
-    });
+    }
+);
